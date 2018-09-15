@@ -193,6 +193,8 @@
 				<version>2.2</version>
 				<configuration>
 					<uriEncoding>UTF-8</uriEncoding>
+					<url>http://localhost:8080/manager/text</url>
+					<server>tomcat7</server> <!-- 此处的名字必须和setting.xml中配置的ID一致 -->
 					<!-- 发布的web应用的路径 -->
 					<path>/bookshop</path>
 				</configuration>

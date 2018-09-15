@@ -56,7 +56,7 @@
    	</bean>
    
     <!-- 2配置事务的特性 -->
-   <tx:advice id="txAdvice" transaction-manager="txManage">
+   <tx:advice id="txAdvice" transaction-manager="txManage"> 
    		<tx:attributes>
    			<!-- 针对使用事务的add开头的方法 
    			read-only 是否只读，true 是，false 可读可写

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 命名空间 ，唯一-->
+<mapper namespace="com.qfedu.dao.IUserDao">
+	
+
+	<!-- 查询到的数据和实体类之间的映射关系 -->
+	<!-- type 实体类 包名+类名 -->
+	<resultMap type="User" id="userMap">
+		<result property="userName" column="userName"/>
+		<result property="password" column="password"/>
+		<result property="email" column="email"/>
+		
+	</resultMap>
+	
+	
+	<select id="findByName" parameterType="string" resultMap="userMap">
+		select * from user where userName=#{userName}
+	</select>
+	
+	<select id="add" parameterType="User" >
+		insert into user(userName, password, email) values(#{userName}, #{password}, #{email})
+	</select>
+	
+</mapper>

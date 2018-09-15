@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link type="text/css" rel="stylesheet" href="css/style.css" />
+<script type="" src="js/jquery-1.12.2.min.js"></script>
+</head>
+<body>
+<div id="header" class="wrap">
+	<div id="logo">网上书城</div>
+	<div id="navbar">
+		<div class="userMenu">
+			<ul>
+				<li class="current"><a href="index.html">首页</a></li>
+				<li><a href="orderlist.html">我的订单</a></li>
+				<li><a href="shopping.html">购物车</a></li>
+				<li><a href="login.html">注销</a></li>
+			</ul>
+		</div>
+		<form method="get" name="search" action="">
+			搜索：<input class="input-text" type="text" name="keywords" /><input class="input-btn" type="submit" name="submit" value="" />
+		</form>
+	</div>
+</div>
+<div id="content" class="wrap">
+	<div class="list bookList">
+		<form method="post" name="shoping" action="addItems">
+			<table>
+				<tr class="title">
+					<th class="checker"></th>
+					<th>书名</th>
+					<th class="price">价格</th>
+					<th class="store">库存</th>
+					<th class="view">图片预览</th>
+				</tr>
+				
+				<tbody id="showBooks">
+				
+				</tbody>
+				
+				
+			</table>
+			
+			<div class="page-spliter" id="did">
+				
+			</div>
+			<div class="button"><input class="input-btn" type="submit" name="submit" value="" /></div>
+		</form>
+	</div>
+</div>
+<div id="footer" class="wrap">
+	XXXXXXXXX &copy; 版权所有
+</div>
+
+<script type="text/javascript">
+			$(function(){
+				// 通过ajax请求，获取第一页的数据
+				page_info(1);
+			})
+		
+		</script>
+
+<script type="text/javascript">
+function page_info(page){
+		$.ajax({
+			type:"get",
+			url:"findBooksByPage?page=" + page ,
+			dataType:"json",
+			success:function(data) {
+				if (data.code == 1) {
+				var info = data.msg.pageInfos;
+				var a = 0;
+				$("#showBooks").empty();
+				$(info).each(function() {
+					 var html = "<tr ";
+					 	if (a % 2 == 1) {
+					 	html += "class='odd'";
+					 	} else {
+					 		
+					 	}
+					 	html += ">";                                                        
+						html += "<td><input type='checkbox' name='bid' value='" + this.bid + "' /></td>  ";
+						html += "<td class='title'>" + this.bookName + "</td>                           ";
+						html += "<td>" + this.b_price + "</td>                                            ";
+						html += "<td>" + this.stock + "</td>                                                ";
+						html += "<td class='thumb'><img src='" + this.image + "' /></td>";
+						html += "</tr>                                                       ";
+						$("#showBooks").append($(html));
+					a++;
+				})
+				
+				$("#did").empty();
+				html = "<a href='#'>&lt;</a>";
+				// 点击超链接，执行js的函数
+				html += "<a href='javascript:page_info(1)'>首页</a>";
+				var pre = data.msg.currentPage - 1;
+				if(pre <= 0){
+					html += "上一页";
+				}else{
+					html += "<a href='javascript:page_info(" + pre + ")'>上一页</a>";
+				}
+				
+				
+				var a = page;
+				var d = page + 3;
+				var e = data.msg.totalPage;
+				var next = data.msg.currentPage + 1;
+				
+				if (a > 1) {
+					html += "<span>...</span>";
+				}
+				
+					if (data.msg.totalPage <= 4) {
+						
+						for(var i = 1; i < e + 1; i++){
+							
+							if(a == i) {
+								
+							html += "<span class='current'>" + i + "</span>";
+							} else {
+									
+							html += "<a href='javascript:page_info(" + i + ")'>" + i + "</a>";
+							}
+						
+						}
+					} else {
+						
+							if (a + 3 > e) {
+								for(var i = e - 3; i < e + 1; i++){
+									
+									if(a == i) {
+								
+									html += "<span class='current'>" + i + "</span>";
+									} else {
+								
+									html += "<a href='javascript:page_info(" + i + ")'>" + i + "</a>";
+									}
+						
+								}
+							} else {
+								
+								for(var i = a; i < a + 4; i++){
+							
+									if(a == i) {
+								
+									html += "<span class='current'>" + i + "</span>";
+									} else {
+								
+									html += "<a href='javascript:page_info(" + i + ")'>" + i + "</a>";
+									}
+						
+								}
+							}
+							
+						}
+					
+					if (d < data.msg.totalPage) {
+						html += "<span>...</span>";
+					}
+				
+				
+				if(next > data.msg.totalPage){
+					
+					html += "下一页";
+				}else{
+					html += "<a href='javascript:page_info(" + next + ")'>下一页</a>";
+				}
+				html += "<a href='javascript:page_info(" + data.msg.totalPage + ")'>末页</a>";
+				html += data.msg.currentPage + "/" + data.msg.totalPage;
+				html += "<a href='#'>&gt;</a>";
+				$("#did").append($(html));
+				
+				}else {
+					alert(data.msg);
+				}
+				
+			}
+		})
+	}
+
+</script>
+
+
+</body>
+</html>

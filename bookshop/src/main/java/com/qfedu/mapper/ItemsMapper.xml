@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 命名空间 ，唯一-->
+<mapper namespace="com.qfedu.dao.IItemsDao">
+	
+
+	<!-- 查询到的数据和实体类之间的映射关系 -->
+	<!-- type 实体类 包名+类名 -->
+	<resultMap type="Items" id="itemsMap">
+		<id property="iid" column="iid"/>
+		<result property="oid" column="oid"/>
+		
+		
+		<result property="createDate" column="createDate"/>
+		<result property="count" column="count"/>
+		<result property="price" column="price"/>
+		<result property="state" column="state"/>
+		<result property="total_price" column="total_price"/>
+		<result property="userName" column="userName"/>
+		
+		<association property="books" 
+			javaType="com.qfedu.entity.Books"
+			resultMap="com.qfedu.dao.IBooksDao.booksMap">
+		</association>
+	</resultMap>
+
+	
+	<insert id="add" parameterType="Items">
+		insert into items(oid, createDate, count, price, state, total_price, bid, userName) value(#{oid}, #{createDate}, #{count}, #{price}, #{state}, #{total_price}, #{books.bid}, #{userName});
+	</insert>
+	
+	<select id="findByIid" parameterType="int" resultMap="itemsMap">
+		select i.*, b.* from items i
+		inner join books b 
+		on i.bid=b.bid
+		where i.iid=#{iid}
+		
+	</select>
+	
+	<update id="update" parameterType="Items">
+		update items set oid=#{oid}, createDate=#{createDate}, count=#{count}, price=#{price}, state=#{state}, total_price=#{total_price}, bid=#{books.bid}, userName=#{userName} where iid=#{iid};
+	</update>
+	
+	<select id="findByBidAndUserName" parameterType="map" resultMap="itemsMap">
+		select * from items i
+		inner join books b 
+		on i.bid=b.bid
+		where i.bid=#{bid} and i.username=#{userName} and i.state=0
+	</select>
+	
+	<select id="findByUserName" parameterType="string" resultMap="itemsMap">
+		select * from items i
+		inner join books b 
+		on i.bid=b.bid
+		where i.username=#{userName} and i.state=0
+	</select>
+	
+	
+	
+	<select id="findByIndexAndSize" parameterType="map" resultType="Books">
+		select * from books limit #{index},#{size}
+	</select>
+</mapper>

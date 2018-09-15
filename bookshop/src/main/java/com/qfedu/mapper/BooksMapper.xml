@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 命名空间 ，唯一-->
+<mapper namespace="com.qfedu.dao.IBooksDao">
+	
+
+	<!-- 查询到的数据和实体类之间的映射关系 -->
+	<!-- type 实体类 包名+类名 -->
+	<resultMap type="Books" id="booksMap">
+		<id property="bid" column="bid"/>
+		<result property="bookName" column="bookName"/>
+		<result property="b_price" column="b_price"/>
+		<result property="image" column="image"/>
+		<result property="stock" column="stock"/>
+		
+	</resultMap>
+	
+	
+	<select id="findAll" parameterType="string" resultMap="booksMap">
+		select * from books
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(1) from books
+	</select>
+	
+	<select id="findByIndexAndSize" parameterType="map" resultType="Books">
+		select * from books limit #{index},#{size}
+	</select>
+	
+	<select id="findById" parameterType="int" resultMap="booksMap">
+		select * from books where bid=#{bid}
+	</select>
+	
+	<update id="update" parameterType="Books">
+		update books set stock=#{stock} where bid=#{bid}
+	</update>
+</mapper>

@@ -56,12 +56,12 @@ public class OrderController {
 			Books books = null;
 			//获取订单id
 			int oid = order.getOid();
-			for (Integer i : iid) {
+			for (int i = 0; i < iid.length; i++) {
 				//获取要结算的购物车
-				items = itemsService.findByIid(i);
+				items = itemsService.findByIid(iid[i]);
 				//获取购物车中的商品
 				books = booksService.findById(items.getBooks().getBid());
-				if(books.getStock() - items.getCount() < 0) {
+				if(books.getStock() - count[i] < 0) {
 					return "redirect:/error.html";
 				}
 				
@@ -71,7 +71,7 @@ public class OrderController {
 				//修改购物车（添加订单id、修改订单生成时间、修改购物车状态为已结算状态1）
 				itemsService.update(items);
 				
-				books.setStock(books.getStock() - items.getCount());
+				books.setStock(books.getStock() - count[i]);
 				//修改商品库存
 				booksService.update(books);
 			}
